@@ -1,0 +1,63 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Get a free hosted Postgres database in seconds: `npx create-db`
+
+generator client {
+  provider = "prisma-client-js"
+  output   = "../src/generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+model User {
+  id             String          @id @default(uuid())
+  name           String
+  email          String          @unique
+  password       String
+  gender         String
+  createdAt      DateTime        @default(now())
+  movies         Movie[]
+  watchListItems WatchListItem[]
+}
+
+model Movie {
+  id          String   @id @default(uuid())
+  title       String
+  overview    String?
+  rate        Int?
+  createdBy   String
+  runtime     Int
+  releaseYear Int
+  genres      String[]
+  ceatedAt    DateTime @default(now())
+  updatedAt   DateTime @default(now())
+
+  creator        User            @relation(fields: [createdBy], references: [id], onDelete: Cascade)
+  watchListItems WatchListItem[]
+}
+
+model WatchListItem {
+  id        String          @id @default(uuid())
+  userId    String
+  movieId   String
+  notes     String?
+  rating    Int
+  status    WatchListStatus @default(PLANNED)
+  createdAt DateTime        @default(now())
+  updateAt  DateTime        @default(now())
+
+  user  User  @relation(fields: [userId], references: [id], onDelete: Cascade)
+  movie Movie @relation(fields: [movieId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, movieId])
+}
+
+enum WatchListStatus {
+  PLANNED
+  WATCHING
+  COMPLETED
+  DROPPED
+}
