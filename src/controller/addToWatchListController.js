@@ -1,4 +1,3 @@
-import { request } from "express"
 import { prisma } from "../config/db.js"
 
 
@@ -13,7 +12,7 @@ const addToWatchList = async (req, res) => {
             where: { id: movieId }
         })
 
-        if (!movieId) return res.status(400).json({ "message": "movie does not found" })
+        if (!movie) return res.status(400).json({ "message": "movie was not found" })
 
         const existInWatvhListItem = await prisma.watchListItem.findUnique({
 
@@ -51,8 +50,8 @@ const addToWatchList = async (req, res) => {
 
 
     } catch (error) {
-        console.error("internal server error")
-        return res.status(500).json({ "message": "internal server error" })
+        console.error(error)
+        return res.status(500).json({ message: error.message || "internal server error" })
     }
 
 
@@ -95,8 +94,7 @@ const deleteFromWatchList = async (req, res) => {
 
     } catch (error) {
 
-        console.error("error deleting item in ")
-        res.status(500).json({ message: "internal server error" })
+        res.status(500).json({ message: error.message})
     }
 
 
@@ -150,7 +148,7 @@ const updateWatchList = async (req, res) => {
 
 
     } catch (error) {
-        console.error("error updating watchlist item");
+        console.error(error);
         res.status(500).json({ message: "internal server error" });
     }
 

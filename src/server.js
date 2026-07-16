@@ -8,10 +8,12 @@ import cookieParser from "cookie-parser"
 import movieRouter from "./routes/movieRoute.js"
 import authRouter from "./routes/authRoutes.js"
 import watchListRouter from "./routes/watchListRoutes.js"
+import getMovieRoute from "./routes/getMovies.js"
 
 config()
 
 const app = express()
+app.disable('x-powered-by')
 app.use(cookieParser())
 app.use(express.json())
 app.use(express.urlencoded({ extended: true }))
@@ -19,18 +21,13 @@ connectDb()
 
 //define endpoint for each router
 
-app.get("/", (req, res) => {
-
-    res.send("hello welcome to movie station");
-
-})
-
+app.use("/", getMovieRoute)
 app.use("/movie", movieRouter)
 app.use("/auth", authRouter)
 
 
 app.use("/watchlist", watchListRouter)
-const PORT = 5001 || 7000
+const PORT = process.env.PORT || 7000
 
 
 

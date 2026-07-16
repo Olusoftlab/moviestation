@@ -96,7 +96,7 @@ const loginUser = async (req, res) => {
 
 
 
-    } catch (errror) {
+    } catch (error) {
 
         console.error("Internal server error", error.message)
 
