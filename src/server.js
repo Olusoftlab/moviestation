@@ -19,6 +19,12 @@ connectDb()
 
 //define endpoint for each router
 
+app.get("/", (req, res) => {
+
+    res.send("hello welcome to movie station");
+
+})
+
 app.use("/movie", movieRouter)
 app.use("/auth", authRouter)
 
@@ -49,27 +55,27 @@ process.on("unhandledRejection", (err) => {
 })
 
 
-process.on("uncaughtException", (err)=>{
+process.on("uncaughtException", (err) => {
 
-      console.error("uncaught exception error", err.message);
-    
-      server.close(async()=>{
+    console.error("uncaught exception error", err.message);
 
-           await disconnectDb();
-           process.exit(1);
+    server.close(async () => {
 
-      })
+        await disconnectDb();
+        process.exit(1);
+
+    })
 })
 
 
-process.on("SIGTERM", (err)=>{
+process.on("SIGTERM", (err) => {
 
-   console.log("error running app", err.message);
-   server.close(async()=>{
+    console.log("error running app", err.message);
+    server.close(async () => {
 
-       await disconnectDb();
-       process.exit(1)
-   })
+        await disconnectDb();
+        process.exit(1)
+    })
 
 
 })
