@@ -1,6 +1,6 @@
 import express from "express"
 import { config } from "dotenv"
-import { connectDb, prisma } from "./config/db.js"
+import { connectDb, disconnectDb } from "./config/db.js"
 import cookieParser from "cookie-parser"
 
 
@@ -29,7 +29,48 @@ const PORT = 5001 || 7000
 
 
 
-app.listen(PORT, () => {
+const server = app.listen(PORT, () => {
 
     console.log("Server running on port ", PORT)
 })
+
+
+
+process.on("unhandledRejection", (err) => {
+
+    console.error("unhabdled rejection errror", err)
+
+    server.close(async () => {
+
+        await disconnectDb();
+        process.exit(1);
+
+    })
+})
+
+
+process.on("uncaughtException", (err)=>{
+
+      console.error("uncaught exception error", err.message);
+    
+      server.close(async()=>{
+
+           await disconnectDb();
+           process.exit(1);
+
+      })
+})
+
+
+process.on("SIGTERM", (err)=>{
+
+   console.log("error running app", err.message);
+   server.close(async()=>{
+
+       await disconnectDb();
+       process.exit(1)
+   })
+
+
+})
+
