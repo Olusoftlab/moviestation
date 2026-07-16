@@ -13,7 +13,6 @@ import getMovieRoute from "./routes/getMovies.js"
 config()
 
 const app = express()
-app.disable('x-powered-by')
 app.use(cookieParser())
 app.use(express.json())
 app.use(express.urlencoded({ extended: true }))
