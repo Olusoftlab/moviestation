@@ -1,13 +1,16 @@
 import express from "express"
-import { getMovies, updateMovies, postMovies, deleteMovie } from "../controller/movieController.js"
+import { postMovieController, deleteController, updateController} from "../controller/movieController.js"
+import { authMiddleware } from "../middleware/authMiddleware.js"
+
 
 const router = express.Router()
 
-router.get("/", getMovies)
-router.post("/", postMovies)
-router.put("/", updateMovies)
-router.delete("/", deleteMovie)
+router.use(authMiddleware)
 
+router.post("/", postMovieController)
 
+router.put("/:id",  updateController )
+
+router.delete("/:id", deleteController)
 
 export default router
